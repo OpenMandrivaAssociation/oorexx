@@ -16,6 +16,7 @@ URL:            http://www.oorexx.org
 Source0:        http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-%{version}.tar.bz2
 Source1:        http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-docs-%{version}-pdf.tar.bz2
 Patch0:         oorexx-paths.patch
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 ExcludeArch:    x86_64
 Provides:	rexx
 
