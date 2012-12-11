@@ -1,23 +1,22 @@
-%define name	oorexx
-%define version	3.1.2
-%define release %mkrel 4
-%define major 3
-%define libname %mklibname %name %major
-%define develname %mklibname %name -d
+%define _disable_ld_no_undefined 1
 
-Name:           %{name}
-Version:        %{version}
-Release:        %{release}
-Summary:        Open Object Rexx
+%define major 4
+%define libname %mklibname %{name} %{major}
+%define develname %mklibname %{name} -d
 
-Group:          Development/Other
-License:        CPL
-URL:            http://www.oorexx.org
-Source0:        http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-%{version}.tar.bz2
-Source1:        http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-docs-%{version}-pdf.tar.bz2
-Patch0:         oorexx-paths.patch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-ExcludeArch:    x86_64
+Name:		oorexx
+Version:	4.1.0
+Release:	1
+Summary:	Open Object Rexx
+
+Group:		Development/Other
+License:	CPL
+URL:		http://www.oorexx.org
+Source0:	http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-%{version}-source.tar.gz
+Source1:	http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-%{version}-pdf.zip
+Patch0:		oorexx-4.1.0-paths.patch
+Patch1:		oorexx-4.1.0-sfmt.patch
+BuildRequires:	byacc
 Provides:	rexx
 
 %description
@@ -31,9 +30,9 @@ features that allow you to gradually change your programming style as
 you learn more about objects.
 
 %package docs
-Summary:        Documentation for ooRexx
-Group:          Development/Other
-Requires:       %{name} = %{version}-%{release}
+Summary:	Documentation for ooRexx
+Group:		Development/Other
+Requires:	%{name} = %{version}-%{release}
 
 %description docs
 Open Object Rexx is an object-oriented scripting language. The
@@ -48,12 +47,11 @@ you learn more about objects.
 This package contains most of the documentation for ooRexx. It is
 separate from the main package due to its large size.
 
-%package -n %libname
-Group: System/Libraries
-Summary: Shared libraries for oorexx
-Provides: librexx%major = %version-%release
+%package -n %{libname}
+Group:		System/Libraries
+Summary:	Shared libraries for oorexx
 
-%description -n %libname
+%description -n %{libname}
 Open Object Rexx is an object-oriented scripting language. The
 language is designed for "non-programmer" type users, so it is easy to
 learn and easy to use, and provides an excellent vehicle to enter the
@@ -63,14 +61,14 @@ It extends the procedural way of programming with object-oriented
 features that allow you to gradually change your programming style as
 you learn more about objects.
 
-%package -n %develname
-Group: Development/C
-Summary: Development libraries for oorexx
-Requires: %libname = %version
-Provides: %name-devel = %version-%release
-Provides: rexx-devel = %version-%release
+%package -n %{develname}
+Group:		Development/C
+Summary:	Development libraries for oorexx
+Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-devel = %{version}-%{release}
+Provides:	rexx-devel = %{version}-%{release}
 
-%description -n %develname
+%description -n %{develname}
 Open Object Rexx is an object-oriented scripting language. The
 language is designed for "non-programmer" type users, so it is easy to
 learn and easy to use, and provides an excellent vehicle to enter the
@@ -81,66 +79,48 @@ features that allow you to gradually change your programming style as
 you learn more about objects.
 
 %prep
-%setup -q -n ooRexx-%{version}
+%setup -q -c -n ooRexx-%{version}
 %setup -q -D -T -a 1 -n ooRexx-%{version}
 %patch0 -p1 -b .paths
+%patch1 -p1
 
 %build
-%configure --disable-static
-%make
+%configure2_5x --disable-static
+%make LIBS="-lpthread -ldl"
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f '{}' ';'
+%makeinstall_std
+
 rm -fr samples/**/.deps
-rm -f $RPM_BUILD_ROOT%{_datadir}/ooRexx/rexx.csh
-rm -f $RPM_BUILD_ROOT%{_datadir}/ooRexx/rexx.sh
-mv $RPM_BUILD_ROOT%{_bindir}/rxftp.cls $RPM_BUILD_ROOT%{_datadir}/ooRexx
-mv $RPM_BUILD_ROOT%{_bindir}/rxregexp.cls $RPM_BUILD_ROOT%{_datadir}/ooRexx
-chmod 0644 $RPM_BUILD_ROOT%{_datadir}/ooRexx/*
+rm -f %{buildroot}%{_datadir}/ooRexx/rexx.csh
+rm -f %{buildroot}%{_datadir}/ooRexx/rexx.sh
+chmod 0644 %{buildroot}%{_datadir}/ooRexx/*
 
 # remove cruft
-rm -f $RPM_BUILD_ROOT%{_datadir}/ooRexx/{*.rex,readme}
+rm -f %{buildroot}%{_datadir}/ooRexx/{*.rex,readme}
 find . -name .deps | xargs rm -fr
 rm -fr samples/windows
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%if %mdkversion < 200900
-%post -n %libname -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %libname -p /sbin/ldconfig
-%endif
-
 %files
-%defattr(-,root,root,-)
-%doc CPLv1.0.txt readme.pdf
+%doc CPLv1.0.txt ReleaseNotes
 %{_bindir}/rexx
 %{_bindir}/rexxc
-%{_bindir}/rxdelipc
-%{_bindir}/rxmigrate
+%{_bindir}/rexximage
+%{_bindir}/rxapi
+%{_bindir}/rxapid
 %{_bindir}/rxqueue
 %{_bindir}/rxsubcom
 %{_datadir}/ooRexx
 %{_mandir}/man*/*
 
 %files docs
-%defattr(-,root,root,-)
-%doc rexxpg.pdf rexxref.pdf rxftp.pdf rxmath.pdf rxsock.pdf
-%doc samples README.txt
+%doc readme.pdf rexxpg.pdf rexxref.pdf rxftp.pdf rxmath.pdf rxsock.pdf
 
-%files -n %develname
-%defattr(-,root,root,-)
-%{_includedir}/rexx.h
-%{_libdir}/lib*.so
+%files -n %{develname}
 %{_bindir}/oorexx-config
+%{_libdir}/lib*.so
+%{_includedir}/*.h
 
-%files -n %libname
-%defattr(-,root,root,-)
-%doc CPLv1.0.txt
-%{_libdir}/lib*.so.*
+%files -n %{libname}
+%{_libdir}/lib*.so.%{major}*
 

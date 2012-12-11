@@ -1,0 +1,24 @@
+diff -urN ooRexx-4.1.0-orig/utilities/rexx/platform/unix/rexx.cpp ooRexx-4.1.0-patched/utilities/rexx/platform/unix/rexx.cpp
+--- ooRexx-4.1.0-orig/utilities/rexx/platform/unix/rexx.cpp	2010-02-24 01:44:15.000000000 +1000
++++ ooRexx-4.1.0-patched/utilities/rexx/platform/unix/rexx.cpp	2012-11-23 18:30:18.000000000 +1100
+@@ -110,7 +110,7 @@
+ 
+         case 'v': case 'V':            /* display version string            */
+           ptr = RexxGetVersionInformation();
+-          fprintf(stdout, ptr);
++          fprintf(stdout, "%s", ptr);
+           fprintf(stdout, "\n");
+           RexxFreeMemory(ptr);
+           return 0;
+diff -urN ooRexx-4.1.0-orig/utilities/rexxc/platform/unix/RexxCompiler.cpp ooRexx-4.1.0-patched/utilities/rexxc/platform/unix/RexxCompiler.cpp
+--- ooRexx-4.1.0-orig/utilities/rexxc/platform/unix/RexxCompiler.cpp	2009-07-12 23:46:51.000000000 +1100
++++ ooRexx-4.1.0-patched/utilities/rexxc/platform/unix/RexxCompiler.cpp	2012-11-23 18:28:29.000000000 +1100
+@@ -144,7 +144,7 @@
+     if (!silent)                       /* display version and copyright     */
+     {
+         ptr = RexxGetVersionInformation();
+-        printf(ptr);
++        printf("%s", ptr);
+         printf("\n");
+         RexxFreeMemory(ptr);
+     }
