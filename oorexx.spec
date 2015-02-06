@@ -6,7 +6,7 @@
 
 Name:		oorexx
 Version:	4.1.0
-Release:	1
+Release:	2
 Summary:	Open Object Rexx
 
 Group:		Development/Other
