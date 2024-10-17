@@ -11,7 +11,7 @@ Summary:	Open Object Rexx
 
 Group:		Development/Other
 License:	CPL
-URL:		http://www.oorexx.org
+URL:		https://www.oorexx.org
 Source0:	http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-%{version}-source.tar.gz
 Source1:	http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-%{version}-pdf.zip
 Patch0:		oorexx-4.1.0-paths.patch
