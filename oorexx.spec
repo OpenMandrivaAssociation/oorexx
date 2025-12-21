@@ -16,6 +16,11 @@ Source0:	http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-%{version}-s
 Source1:	http://switch.dl.sourceforge.net/sourceforge/oorexx/ooRexx-%{version}-pdf.zip
 Patch0:		oorexx-4.1.0-paths.patch
 Patch1:		oorexx-4.1.0-sfmt.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	byacc
 Provides:	rexx
 
